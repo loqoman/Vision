@@ -13,14 +13,12 @@ import time
 import sys
 import argparse
 import os
-
-# import daemon
+import daemon
 
 # local imports
 import algo
 import comm
 import picam
-
 
 class PiVideoStream:
     def __init__(self):
@@ -37,11 +35,12 @@ class PiVideoStream:
                 ip = "10.49.15.2"
             else:
                 ip = "localhost"
-            print("starting comm on " + ip)
+            print("starting comm to " + ip)
             self.commChan = comm.Comm(ip)
 
-        self.picam = picam.PiCam(resolution=(self.args.iwidth, self.args.iheight),
-                                framerate=(self.args.fps))
+        self.picam = picam.PiCam(resolution=(self.args.iwidth, 
+                                             self.args.iheight),
+                                 framerate=(self.args.fps))
 
     def parseArgs(self):
         """
@@ -52,6 +51,9 @@ class PiVideoStream:
         parser.add_argument("--threads", dest="threads",
                             help="threads: (0-4) [0]",
                             default=0, type=int)
+        parser.add_argument("--algo", dest="algo",
+                            help="(empty, default)",
+                            default="default")
         parser.add_argument("--width", dest="iwidth",
                             help="image width [320]",
                             default=320, type=int)
@@ -79,9 +81,23 @@ class PiVideoStream:
         parser.add_argument("--color", dest="color",
                             help="color: ([0,255],[0,255])",
                             default=None)
+        parser.add_argument("--debug", dest="debug",
+                            help="debug: [0,1] ",
+                            default=0)
+        parser.add_argument("--daemonize",
+                            help="run app in background",
+                            action="store_true")
+               
         self.args = parser.parse_args()
 
     def Run(self):
+        if self.args.daemonize:
+            with daemon.DaemonContext():
+                self.go();
+        else:
+            self.go();
+
+    def go(self):
         if self.args.threads == 0:
             self.processVideo()
         else:
@@ -119,11 +135,17 @@ class PiVideoStream:
 
     def processFrame(self, image):
         abort = False
+
+        dx, frame = algo.processFrame(image, algo=self.args.algo, 
+                                    display=self.args.display,
+                                    debug=self.args.debug)
+        
         if self.commChan:
             self.target.clock = time.clock()
+            self.target.angleX = dx
+            # Not setting dy, because that may mess things up
             self.commChan.SetTarget(self.target)
 
-        frame = algo.processFrame(image, algo="default")
         if self.args.display:
             cv2.imshow("Frame", frame)
             key = cv2.waitKey(1) & 0xFF
