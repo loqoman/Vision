@@ -19,11 +19,11 @@
 
 ### **`algo.py`**  
 
-Summary 
+#### Summary 
 
 * `algo` is the 'bread and butter' of the vision subsystem, it is where most of the important computer-vision related code goes. `algo` is one of the only places (apart from `targetUtils`) where `opencv` calls are made. 
 
-Technical details of `algo`
+#### Technical details of `algo`
 
 * `algo` is a library file which defines differnet 'pipelines' for the vision subsystem. It is imported into `runpicam` and `picamstreamer`, which call `processFrame()`. `processFrame()` is responsible for looking at the passed in `config` and selecting the proper pipeline to run.
 * By convention within *this* codebase (This might not be true everywhere!), a 'pipeline' is a method which follows the structure:
@@ -34,11 +34,11 @@ Technical details of `algo`
 
 ### **`config.py`**  
 
-Summary
+#### Summary
 
 * Library file which holds dictionaries reprensting different 'setups' that the vision system might be run in. For isntane, `calibConfig` is used when determining camera intrensics, while `GPConfigV1` is the config for the vision camera used on-robot.
 
-Technical details of `config`
+#### Technical details of `config`
 
 * Config is a python `dict`, which has two main sub-dictionaries: `algo` and `picam` (Not to be confused with the files of the same name, but they are related). Each sub-dict contains data used in the aforementioned parts of the vision subsystem. Generally, the `algo` sub-dict contains values used in `algo.py`, `targetUtils.py`, and `poseEstimation.py`
 * Most of the values in the `picam` sub-dict deserve no special explanation. The documentation for each value can be found [here](https://picamera.readthedocs.io/en/release-1.13/api_camera.html)  They are values used in the creation of a `picam` object, speficially interacting with the `PiCamera` libary. 
@@ -48,7 +48,7 @@ Technical details of `config`
     * Nb: This value is *forced* to `True` In picamStreamer
   * `hsvRangeLow` / `hsvRangeHigh` - Upper and lower bounds of `cv2.inRange`, implemented in the method `targetUtils.threshholdFrame()`
 
-Visually
+#### Visually
 
 * A hirearchical view enumerating all potentional values expressed in a single `config`
 
@@ -76,36 +76,102 @@ myConfig
     ∟"state"
         ∟"operatingRes" : "high"            -- String
         ∟"TargetPNP" : targets.TargetPNP()  -- Targets.py Object
-        ∟"TargetPID" : targets.TargetPID()  -- Targets.py
+        ∟"TargetPID" : targets.TargetPID()  -- Targets.py Object
         ∟"startPipeTime" : -1               -- Signed Int
 
 ```
 
 * Nb: It's important to brush up on your python dictionaries before playing around with `config.py`. asking `myConfig` for the value at key `"algo"` will return *another* dictionary, not the string "verticies". Examples of using nested dictionaries can be found scattererd throughout the codebase.
 
+### **`cameraLatencyTest.py`** 
 
+#### Summary
 
+* Test script to determine how long it takes to pull frames out of the `camera` object.
 
-* `cameraLatencyTest.py` - Test script to determine how long it takes to pull frames out of the `camera` object
-* `comm.py` - Library file which acts as an abstractino over the `networktables` library
-* `picam.py` - Library file which acts as an abstraction over the `PiCamera` library, the reccomnded library for accessing camera data
-* `picamStreamer` - Runtime file which is primarily used for Debugging. Begins an MJPEG server which can be used to see the camera feed.
-* `poseEstimation.py` - Library File which is entirely dedicated to running a successful PnP pipeline.
-* `runPiCam.py` - Runtime file used in on-field operation. Ties together `config`, `algo`, `comm`, and `picam`.
-* `startVision.sh` - Runtime file which is used by the OS to start up `runPiCam`
-* `steamTests` - GET RID OF THIS FILE 
-* `targetUtils` - Library file entirely devoted to functions relating to target geometry.
-* `targets.py` - Intermediary Library file used to provide an object-oriented framework for representing targets in networktables.
-* `testLatency` - Script used to determine the computation time of speific pipelines. 
+### **`comm.py`**  
 
+#### Summary
+
+* Library file which acts as an abstraction over the `networktables` library
+
+#### Technical details of `comm`
+
+Coming soon!
+
+### **`picam.py`**  
+
+#### Summary
+
+* Library file which acts as an abstraction over the `PiCamera` library, the reccomnded library for accessing camera data
+
+#### Technical details of `picam.py`
+
+Coming soon!
+
+### **`picamStreamer.py`**  
+
+#### Summary
+
+* Runtime file which is primarily used for Debugging. Begins an MJPEG server which can be used to see the camera feed
+
+### **`poseEstimation.py`**  
+
+#### Summary
+
+* Library File which is entirely dedicated to running a successful PnP pipeline.
+
+#### Technical details of `poseEstimation.py`
+
+Coming soon!
+
+### **`runPiCam.py`**  
+
+#### Summary
+
+* Runtime file used in on-field operation. Ties together `config`, `algo`, `comm`, and `picam`.
+
+#### Technical details of `runPiCam.py`
+
+Coming soon!
+
+### **`startVision.sh`**  
+
+#### Summary
+
+* Runtime file which is used by frcPiGen to start up `runPiCam`
+
+### **`targetUtils.py`**  
+
+#### Summary
+
+* Library file entirely devoted to functions relating to target geometry
+
+#### Technical details of `targetUtils.py`
+
+### **`targets.py`**  
+
+#### Summary
+
+* Intermediary Library file used to provide an object-oriented framework for representing targets in networktables.
+
+#### Technical details of `targets.py`
+
+### **`testLatency.py`**
+
+#### Summary
+
+* Script used to determine the computation time of speific pipelines. 
 
 ## Runtime Structure
+
+### Coming soon!
 
 # Q&A
 
 ## I Want to Write Vision Code, Where do I Start?
 
-* A good first step would be to make a `config` representing your home setup. This will allow you to get a hand on the python dictionary 
+* A good first step would be to make a `config` representing your home setup. This will allow you to get a hand on the python dictionary system.
 
 ## What Is the Minimum Amount of Work That Must be Done (software-wise) to go From One Season to the Next?
 
