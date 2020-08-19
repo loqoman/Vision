@@ -80,8 +80,6 @@ moduleDebuggingConfig["algo"].update({
     "hsvRangeLow": np.array([40,50,90]),
     "hsvRangeHigh": np.array([90,255,255]),
 
-    "theta" : 0, # Represents the angle of elevation
-
     "camBIntrensics1080p": { #Calibrated on 2020.02.16, reprojection error of 0.5
         "focalLength" : (1.81606009e+03,1.82082976e+03),
         "principalPoint" : (9.52672626e+02,5.47692316e+02),
