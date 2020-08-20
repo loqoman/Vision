@@ -157,7 +157,7 @@ GPConfigV1["algo"].update({
     "hsvRangeHigh": np.array([80,255,255]),
 
     # -= Mounted camera is camera B =-
-    "camIntrensics1080p": {
+    "camIntrensics": {
         "focalLength" : (1.81606009e+03,1.82082976e+03),
         "principalPoint" : (9.52672626e+02,5.47692316e+02),
         "distortionCoeffs" : np.array([ 1.07854440e-01, -8.34892908e-01, -1.86048786e-03, -1.26161591e-03,  1.44654595e+00])

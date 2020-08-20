@@ -120,9 +120,9 @@ def estimatePose(im, imgPts, cfg):
     # If there are camera intresncics set in the config, default to those
     try:
 
-        fx,fy = cfg['camIntrensics1080p']['focalLength']
-        cx,cy = cfg['camIntrensics1080p']['principalPoint']
-        distCoeffs = cfg['camIntrensics1080p']['distortionCoeffs']
+        fx,fy = cfg['camIntrensics']['focalLength']
+        cx,cy = cfg['camIntrensics']['principalPoint']
+        distCoeffs = cfg['camIntrensics']['distortionCoeffs']
         
     except Exception as e:
         logging.debug("Running PnP with no camera intrensics in config!")
