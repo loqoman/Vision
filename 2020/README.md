@@ -30,7 +30,8 @@
 ```
     frame & cfg -> result & outputframe
 ```
-* Where `frame` is the raw (unmodified off of the camera) image, and `cfg` is the operating config,
+* Where `frame` is the raw (unmodified off of the camera) image, and `cfg` is the operating config at the `'algo'` level.
+* In a similar method to [GRIP](https://docs.limelightvision.io/en/latest/grip_software.html), the intention is that pipelines described in `algo.py` will be an custom selection of functions defined `targetUtils.py`, allowing the user to create specific pipelines based on general-purpose functions.
 
 ### **`config.py`**  
 
@@ -47,6 +48,11 @@
   * `display` - Used to controll if methods in `poseEstimation` should draw on the passed frame. Drawing can be computation intensive, but invaluable when debugging 
     * Nb: This value is *forced* to `True` In picamStreamer
   * `hsvRangeLow` / `hsvRangeHigh` - Upper and lower bounds of `cv2.inRange`, implemented in the method `targetUtils.threshholdFrame()`
+  * `camIntrensics` - Sub-Dict which holds [camera intrensics](https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html) (Chiefly `focalLength` and `principalPoint`) values. Note that a given set of camera intrensics corresponds to a unique **camera and operating resolution**. 
+    * `poseEstimation` searches for the sub-dict under the key 'camIntrensics', however other configs have amera intresnsics ucnder a differnet key, this can be useful for storing calibration data of a backup camera.
+      * In the case of `moduleDebuggingConfig`, three cameras were calibrated (one primary and two backup), and physically marked as cameras 'A', 'B', and 'C'. Even through the code never looks for these values, their intrensics were recoded in the config for future use.
+* Finally, the `state` sub-sub-dict was added near the tail-end of the 2020 season to allow for easier access of `target` objects, and the potential to change operating mode on the fly.
+  * In the 2020 season, there was a planned pipeilne which would feature the camera 'switching' operating resolutions. The camera would run a non-pnp, low resolution 'inital search' of a frame to determine (rougly) where the points of interest were for a pnp computation, then the full-resolution imagine would be searched for the points of interest, but only where the low-resolution image ballparked the points. This strategy was never implemented.
 
 #### Visually
 
@@ -69,7 +75,7 @@ myConfig
     ∟"display": False                       -- Bool
     ∟"hsvRangeLow": np.array([40,50,90])    -- Numpy array
     ∟"hsvRangeHigh": np.array([90,255,255]) -- Numpy array
-    ∟"camIntrensics1080p"
+    ∟"camIntrensics"
         ∟"focalLength" : (1.81606009e+03,1.82082976e+03)        -- Tuple of the form (Float, Float)
         ∟"principalPoint" : (9.52672626e+02,5.47692316e+02)     -- Tuple of the form (Float, Float)
         ∟"distortionCoeffs" : np.array([ 1.07854440e-01, -8.34892908e-01, -1.86048786e-03, -1.26161591e-03,  1.44654595e+00])                                         -- Tuple of the form (Float, Float)
@@ -83,21 +89,17 @@ myConfig
 
 * Nb: It's important to brush up on your python dictionaries before playing around with `config.py`. asking `myConfig` for the value at key `"algo"` will return *another* dictionary, not the string "verticies". Examples of using nested dictionaries can be found scattererd throughout the codebase.
 
-### **`cameraLatencyTest.py`** 
-
-#### Summary
-
-* Test script to determine how long it takes to pull frames out of the `camera` object.
-
 ### **`comm.py`**  
 
 #### Summary
 
-* Library file which acts as an abstraction over the `networktables` library
+* Library file which acts as an abstraction over the `networktables` library. `comm` is responsible for creating and sending messages over the connection the vision system has with the robot over [networktables] (https://robotpy.readthedocs.io/projects/pynetworktables/en/stable/).
+
 
 #### Technical details of `comm`
 
-Coming soon!
+* The `comm` module has a global variable (`theComm`) which points to a single instance of the `comm` class. The most common functions used within the `comm` modules are those at the top, which all reference `theComm`. By and large, the `Target` class has the most interaction with methods inside `comm`. The `comm` module itself is used only in `runpicam` to send the status of the vision system.
+  * Nb: For `Target.send()` to work, a `comm` object *does* have to be created
 
 ### **`picam.py`**  
 
@@ -156,6 +158,16 @@ Coming soon!
 * Intermediary Library file used to provide an object-oriented framework for representing targets in networktables.
 
 #### Technical details of `targets.py`
+
+## Debugging Scripts
+
+* Using pre-captured frames, one can do 'offline' work with the vision code without the need for physical hardware. 
+
+### **`cameraLatencyTest.py`** 
+
+#### Summary
+
+* Test script to determine how long it takes to pull frames out of the `camera` object.
 
 ### **`testLatency.py`**
 
