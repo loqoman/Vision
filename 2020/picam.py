@@ -29,51 +29,15 @@ class PiCam:
                             framerate=self.config["framerate"],
                             sensor_mode=self.config["sensormode"])
         
+        picamSettings = ["iso", "awb_mode", "awb_gains", "brightness", "contrast", 
+                         "exposure_mode", "exposure_compensation", "flip", "rotation", "saturation"
+                         "sharpness", "shutter_speed"]
 
-
-        if "iso" in self.config:
-            self.cam.iso = self.config["iso"]
-            # allow the camera to warm up in case exposure_mode is "off"
-            time.sleep(.1) 
-        else:
-            logging.warning("picam: no iso")
-
-        if "awb_mode" in self.config:
-            self.cam.awb_mode = self.config["awb_mode"]
-
-        if "awb_gains" in self.config:
-            self.cam.awb_gains = self.config["awb_gains"]
-
-        if "brightness" in self.config:
-            self.cam.brightness = self.config["brightness"]
-        else:
-            logging.warning("picam: no brightness")
-
-        if "contrast" in self.config:
-            self.cam.contrast = self.config["contrast"]
-        else:
-            logging.warning("picam: no contrast")
-
-        if "exposure_mode" in self.config:
-            self.cam.exposure_mode = self.config["exposure_mode"]
-
-        if "exposure_compensation" in self.config:
-            self.cam.exposure_compensation=self.config["exposure_compensation"]
-
-        if "flip" in self.config:
-            self.cam.vflip = self.cam.hflip = self.config["flip"]
-
-        if "rotation" in self.config:
-            self.cam.rotation = self.config["rotation"]
-
-        if "saturation" in self.config:
-            self.cam.saturation = self.config["saturation"]
-
-        if "sharpness" in self.config:
-            self.cam.sharpness = self.config["sharpness"]
-
-        if "shutter_speed" in self.config:
-            self.cam.shutter_speed = self.config["shutter_speed"]
+        for setting in picamSettings:
+            if setting in self.config:
+                setattr(self.cam, setting, self.config[setting])
+            else:
+                logging.warning("Could not find " + setting + " in picam config")
 
         time.sleep(.1) # more settling
 
