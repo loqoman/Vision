@@ -15,7 +15,7 @@
 
 # Documentation
 
-## Files
+## Library Modules
 
 ### **`algo.py`**  
 
@@ -93,29 +93,38 @@ myConfig
 
 #### Summary
 
-* Library file which acts as an abstraction over the `networktables` library. `comm` is responsible for creating and sending messages over the connection the vision system has with the robot over [networktables] (https://robotpy.readthedocs.io/projects/pynetworktables/en/stable/).
+* Library file which acts as an abstraction over the `networktables` library. `comm` is responsible for creating and sending messages over the connection the vision system has with the robot over [networktables](https://robotpy.readthedocs.io/projects/pynetworktables/en/stable/).
 
 
 #### Technical details of `comm`
 
 * The `comm` module has a global variable (`theComm`) which points to a single instance of the `comm` class. The most common functions used within the `comm` modules are those at the top, which all reference `theComm`. By and large, the `Target` class has the most interaction with methods inside `comm`. The `comm` module itself is used only in `runpicam` to send the status of the vision system.
   * Nb: For `Target.send()` to work, a `comm` object *does* have to be created
+* By design, `runpicam` interacts with (sets the value of ) `target` objects, which all methods inside `comm` 
 
 ### **`picam.py`**  
 
 #### Summary
 
-* Library file which acts as an abstraction over the `PiCamera` library, the reccomnded library for accessing camera data
+* Library file which acts as an abstraction over the `PiCamera` library, the reccomnded library for accessing camera data. `picam` is an abtraction over several modules in the [`picamera`](https://github.com/waveform80/picamera) library.
 
 #### Technical details of `picam.py`
 
-Coming soon!
+* `picam` is the one-stop-shop for dealing with any settings related to the picamera. The PiCam object is passed config at the "picam" level on creation, which is iterated over to find any settigns related to the camera. 
+* Of note is the `sensormode` paramater, which can result in several headaches if not set properly. Through experimentation, `sensormode` overrides white balence and exposure settings which causes the camera to appear over-saturated or under-saturated based on the proximity of an object (When an object was brought very close to the camera, it would change exposure settings, which would persist when the object was removed from the cameras field of view). In-depth documentation of camera settings can be found [here](https://picamera.readthedocs.io/en/release-1.13/api_camera.html).
 
-### **`picamStreamer.py`**  
+### **`targetUtils.py`**  
 
 #### Summary
 
-* Runtime file which is primarily used for Debugging. Begins an MJPEG server which can be used to see the camera feed
+* `targetUtils` holds all the functions which deal with target geometry and the majority of `opencv` calls. 
+
+#### Technical details of `targetUtils.py`
+
+* The type of function that belongs in `targetUtils` is less rigid than `algo`. By convention, if there is a function which relates to target extraction, isolation, or sorting, then it belongs in `targetUtils`. All the functions in `targetUtils` have access to the "algo" level of config, so items such as hsv ranges can be made avabile.   
+* Each (major) function in `targetUtils` has an assoicaited [doctest](https://docs.python.org/3.5/library/doctest.html), which can load data from the `data/` folder one, be it acutal images (with `cv2.imread()`), or just a list of points. A good example of this is the `target2pnp8points()` function, with can 'Sort the target's points into a 'pnp format' as defined in poseEstimation.py'. The doctest uses the half-hexagon points in `pnpDebugFrame1.png`. The output can be roughly correlated to the source image to make sure the sorting was done properly. Additionally, a doctest can be used to load and draw over an image for graphical feedback.
+  * Note that most of the doctests arn't full blown unit tests, as some of the doctests don't have 'fail' conditions, rather just output the result of the function through logging. Python doctests support a failure mode (with syntax similar to an `assert()`) ensuring the doctest output matches the expected output.
+
 
 ### **`poseEstimation.py`**  
 
@@ -126,6 +135,22 @@ Coming soon!
 #### Technical details of `poseEstimation.py`
 
 Coming soon!
+
+### **`picamStreamer.py`**  
+
+#### Summary
+
+* Runtime file which is primarily used for Debugging. Begins an MJPEG server which can be used to see the camera feed
+
+### **`targets.py`**  
+
+#### Summary
+
+* Intermediary Library file used to provide an object-oriented framework for representing targets in networktables.
+
+#### Technical details of `targets.py`
+
+## Runtime Files
 
 ### **`runPiCam.py`**  
 
@@ -142,22 +167,6 @@ Coming soon!
 #### Summary
 
 * Runtime file which is used by frcPiGen to start up `runPiCam`
-
-### **`targetUtils.py`**  
-
-#### Summary
-
-* Library file entirely devoted to functions relating to target geometry
-
-#### Technical details of `targetUtils.py`
-
-### **`targets.py`**  
-
-#### Summary
-
-* Intermediary Library file used to provide an object-oriented framework for representing targets in networktables.
-
-#### Technical details of `targets.py`
 
 ## Debugging Scripts
 
@@ -176,6 +185,10 @@ Coming soon!
 * Script used to determine the computation time of speific pipelines. 
 
 ## Runtime Structure
+
+### Logging
+
+### `FRCVision`
 
 ### Coming soon!
 

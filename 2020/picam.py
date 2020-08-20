@@ -37,7 +37,7 @@ class PiCam:
             if setting in self.config:
                 setattr(self.cam, setting, self.config[setting])
             else:
-                logging.warning("Could not find " + setting + " in picam config")
+                logging.warning("Could not find " + setting + " in picam-level config")
 
         time.sleep(.1) # more settling
 

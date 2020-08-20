@@ -124,6 +124,3 @@ class Comm:
     def connectionListener(connected, connectionInfo):
         logging.getLogger("nt").debug("connected: %d" % connected)
         logging.getLogger("nt").debug("info: %s" % json.dumps(connectionInfo))
-
-
-def 
