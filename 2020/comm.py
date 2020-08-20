@@ -34,19 +34,6 @@ def getCurrentTime():
         timestamp = theComm.robotTable.getNumber("timeStamp",(-1))
         return timestamp # x,y,time
 
-def getCameraPosition():
-    if theComm != None:
-        # Get the robot relative mounting of the camera
-        mountPosition = theComm.controlTable.getNumberArray("mountIntrensics",-1)
-        return mountPosition # x,y,z
-
-def getTurretAngle():
-    if theComm != None:
-        # Get the turret angle from smartDashboard
-        # TODO Check
-        turretTheta = theComm.controlTable.getNumber("turretAngle",-1)
-        return turretTheta
-
 def putNumber(key, value):
     if theComm != None:
         theComm.sd.putNumber("Vision/"+key, value)
@@ -139,3 +126,4 @@ class Comm:
         logging.getLogger("nt").debug("info: %s" % json.dumps(connectionInfo))
 
 
+def 
