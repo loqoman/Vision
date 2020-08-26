@@ -700,6 +700,7 @@ tcp6       0      0 :::22                   :::*                    LISTEN
 #### OpenCV+python3 build details
 
 ``` text
+>>> import cv2
 >>> print(cv2.getBuildInformation())
 General configuration for OpenCV 3.4.7 =====================================
   Version control:               v2020.1.1

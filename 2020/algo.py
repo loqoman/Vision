@@ -48,8 +48,6 @@ def processFrame(frame, cfg=None):
         return maskAlgo(frame, cfg)
     elif algo == "hsv":
         return hsvAlgo(frame, cfg)
-    elif algo == "verticies":
-        return generatorHexagonVerticies(frame, cfg)
     elif algo == "calibCap":
         return calibrationCapture(frame, cfg)
     elif algo == "pnp":
@@ -79,19 +77,19 @@ def hsvAlgo(frame,cfg):
 # PID (closed-loop)
 def hexagonPIDPipieline(frame, cfg):
 
-    mask = targetUtils.threshholdFrame(frame,config)
+    mask = targetUtils.threshholdFrame(frame,cfg)
 
     # Slight renaming, for convention
     visImg = frame
     # TODO: Add bitwise and 
     # -== Target Detection ==- 
-    hexagonTarget, visImg = targetUtils.findTarget(visImg, mask, config)
+    hexagonTarget, visImg = targetUtils.findTarget(visImg, mask, cfg)
 
     # If we don't detect a target, drop out here
     if hexagonTarget is None:
         return (None,None, visImg)
     
-    imgPts = targetUtils.target2pnp8Points(hexagonTarget,config)
+    imgPts = targetUtils.target2pnp8Points(hexagonTarget,cfg)
 
     # -== PID Offset Value Calculation ==- #
     targetCenter = targetUtils.getTargetCenter(imgPts)
