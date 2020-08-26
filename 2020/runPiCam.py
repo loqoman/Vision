@@ -104,34 +104,7 @@ class PiVideoStream:
         self.args = parser.parse_args()
 
     def Run(self):
-        self.go()
-
-    def go(self):
-        # TODO: Needs to be cut due to jeffery's multithreading
         self.processVideo()
-        '''
-        else:
-            try:
-                self.captureThread = picam.CaptureThread(self.picam,
-                                                        self.processFrame,
-                                                        self.args.threads)
-                while self.captureThread.running:
-                    time.sleep(1)
-            except KeyboardInterrupt:
-                logging.info("\nuser shutdown")
-            except:
-                e = sys.exc_info()
-                logging.info("\n")
-                logging.info(e)
-                logging.info("\nunexpected error")
-
-            self.captureThread.running = False
-            self.captureThread.join()
-            self.captureThread.cleanup()
-
-        if self.args.display:
-            cv2.destroyAllWindows()
-        '''
 
     def processVideo(self):
         """ create a camera, continually read frames and process them.
