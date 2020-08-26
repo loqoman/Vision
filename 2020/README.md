@@ -8,11 +8,6 @@
 * *Planned Threading Changes* - Theading is planned to play a larger role in this version of the codebase. Stay tuned.
 * *Parsed Agument Changes* - Parsed arguments are now more tightly entertwined with configurations. When arguments are parsed the chosen `config` is updated with the parsed values. Parsed arguments supeceed `config` values. 
 
-## Versioning
-
-* Nb: Currently operating under opencv v3
-
-
 # Documentation
 
 ## Library Modules
@@ -130,17 +125,11 @@ myConfig
 
 #### Summary
 
-* Library File which is entirely dedicated to running a successful PnP pipeline.
+* Library file which is entirely dedicated to running a successful PnP iteration.
 
 #### Technical details of `poseEstimation.py`
 
-Coming soon!
-
-### **`picamStreamer.py`**  
-
-#### Summary
-
-* Runtime file which is primarily used for Debugging. Begins an MJPEG server which can be used to see the camera feed
+* Like `targetUtils`, `poseEstimation` is a library file that holds one function, `estimatePose()`. `estimatePose()` is an abstraction which performs setup, calculation, and cleanup for `cv2.solvePnP()`. It accepts a set of model points, a set of image points, and a config. `estimatePose()` also has the ability to draw pnp vectors over the frame, if `display` is set to true. 
 
 ### **`targets.py`**  
 
@@ -149,6 +138,8 @@ Coming soon!
 * Intermediary Library file used to provide an object-oriented framework for representing targets in networktables.
 
 #### Technical details of `targets.py`
+
+* The purpose of `targets.py` was to remove the need for runtime files to call directly into `comm`, which was found to be tedious and unclear to newer programmers. Instead, runtime files can access the `target` objects stored under the `"state"` key in the working config.
 
 ## Runtime Files
 
@@ -160,7 +151,31 @@ Coming soon!
 
 #### Technical details of `runPiCam.py`
 
-Coming soon!
+* The calling structure of `runPiCam` is as  for competition:
+
+```
+./runPiCam.py --robot roborio --config gpConfig
+```
+* Conceptually, `runpicam` is reponsible for implementing the other elements of the vision codebase together
+
+* `runPiCam` supports the following command-line arguments:
+```
+config    -     Can manually select a config out of config.py. Defaults to whatever config is set to defaultConfig
+threads   -     Select the number of threads (Deprecated)
+algo      -     Can be set to override the algo specified in the running config
+display   -     Can be set to override the display boolean in the running config
+robot     -     Set to speficiy the ip of the robot (networktables host)
+debug     -     Specify the logging level of the python logging module (DEBUG vs. INFO)
+```
+#### Visually
+
+![runpicam flowchart](https://raw.githubusercontent.com/loqoman/Vision/master/docImgs/SpartronicsVision-runPiCam.py.png)
+
+### **`picamStreamer.py`**  
+
+#### Summary
+
+* Runtime file which is primarily used for Debugging. Begins an MJPEG server which can be used to see the camera feed
 
 ### **`startVision.sh`**  
 
