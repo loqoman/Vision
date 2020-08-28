@@ -175,13 +175,15 @@ debug     -     Specify the logging level of the python logging module (DEBUG vs
 
 #### Summary
 
-* Runtime file which is primarily used for Debugging. Begins an MJPEG server which can be used to see the camera feed
+* Runtime file which is primarily used for Debugging. Begins an MJPEG server which can be used to see the camera feed. Once running, a user can point any modern browser at the raspberry pi on port `5080` and view the visual output of a defined pipeline in `algo.py`
+* By default, `picamStreamer` will run the `algo` specified in the working `config` (Which is also a command-line argument when starting the streamer), however it can be changed on the fly by modifying the URL.
+  * Nb: The *exact* string appended(minus `.mjpg`) is matched against the algo's defined in `algo.processFrame()`
 
-### **`startVision.sh`**  
+```
+http://frcvision.local:5080 --> Runs default algo 
 
-#### Summary
-
-* Runtime file which is used by frcPiGen to start up `runPiCam`
+http://frcvision.local:5080/empty.mjpg --> Will force the algo `algo.emptyAlgo()`
+```
 
 ## Debugging Scripts
 
@@ -191,19 +193,19 @@ debug     -     Specify the logging level of the python logging module (DEBUG vs
 
 #### Summary
 
-* Test script to determine how long it takes to pull frames out of the `camera` object.
+* Test script to determine how long it takes to pull frames out of the `camera` object. Specifically, this can used to accuratly benchmark the camera at certain resolutions. This became a valuable tool in 2020, as camera specifications suggested a user could get 15fps at 1080p, but this was not experimentally observed.
 
 ### **`testLatency.py`**
 
 #### Summary
 
-* Script used to determine the computation time of speific pipelines. 
+* Script used to determine the computation time of speific pipelines. The premise behind getting an accurate pipeline is that it is assumed that the computation time of `cv2.imread()` is close to zero. Currently, the script is configured to test `algo.realPNP()`, but it can be trivially augmented to work with other pipeilnes.
 
 ## Runtime Structure
 
-### Logging
+* A section devoted to how certain modules interact within the vision subsystem.
 
-### `FRCVision`
+### Logging
 
 ### Coming soon!
 
