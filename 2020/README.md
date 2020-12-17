@@ -199,15 +199,15 @@ http://frcvision.local:5080/empty.mjpg --> Will force the algo `algo.emptyAlgo()
 
 #### Summary
 
-* Script used to determine the computation time of speific pipelines. The premise behind getting an accurate pipeline is that it is assumed that the computation time of `cv2.imread()` is close to zero. Currently, the script is configured to test `algo.realPNP()`, but it can be trivially augmented to work with other pipeilnes.
+* Script used to determine the computation time of speific pipelines. The premise behind getting an accurate pipeline is the assumpion that computation time of `cv2.imread()` is close to zero. Currently, the script is configured to test `algo.realPNP()`, but it can be trivially augmented to work with other pipeilnes.
 
 ## Runtime Structure
 
-* A section devoted to how certain modules interact within the vision subsystem.
+* A section devoted to how certain modules interact within the vision subsystem. Most runtime information can be found 2
 
 ### Logging
 
-### Coming soon!
+* The logging system for vision is based around the python standard logging lbirary's ability to dump log messages to files. Recall that during ideal operation, almost all parts of the Raspberry Pi filesystem are read-only, and due to the structure of the competition, debugging during a match is often infeasable (doubbly so for a non-essensial subsystem like vision)
 
 # Q&A
 
