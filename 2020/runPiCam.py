@@ -77,7 +77,7 @@ class PiVideoStream:
         # Setting mmounting intrenssics
 
     def parseArgs(self):
-        """
+        """2
         Parse input arguments
         """
         parser = argparse.ArgumentParser(description=
@@ -137,7 +137,7 @@ class PiVideoStream:
         # XXX: Cut
         if self.commChan:
             
-            if target is not None
+            if target is not None:
 
                 self.commChan.UpdateVisionState("Acquired")
                 
